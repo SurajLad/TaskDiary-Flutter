@@ -4,10 +4,57 @@ import 'package:intl/intl.dart';
 import 'package:xno_taskapp/helpers/app_constants.dart';
 import 'package:xno_taskapp/helpers/layout_helper.dart';
 import 'package:xno_taskapp/helpers/text_styles.dart';
+import 'package:xno_taskapp/ui/add_task.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
+  TabController tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(
+        length: endDate.difference(startDate).inDays, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  TabBar _getTabBar() {
+    return TabBar(
+      indicatorColor: AppConstants.appThemeColor,
+      indicatorSize: TabBarIndicatorSize.label,
+      tabs: List.generate(
+        endDate.difference(startDate).inDays,
+        (index) => Tab(
+          icon: Text(
+            '${DateFormat("dd\nMMM").format(DateTime(startDate.year, startDate.month, startDate.day + (index)))}',
+            style: regularTxt,
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+      controller: tabController,
+    );
+  }
+
+  TabBarView _getTabBarView() {
+    return TabBarView(
+      children: List.generate(endDate.difference(startDate).inDays,
+          (index) => Center(child: Text(index.toString()))),
+      controller: tabController,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +62,7 @@ class HomePage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppConstants.appBackgroundColor,
         body: Container(
-          margin: const EdgeInsets.only(left: 28, top: 10),
+          margin: const EdgeInsets.only(left: 25, top: 10, right: 25),
           child: Column(
             children: [
               Row(
@@ -39,8 +86,42 @@ class HomePage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    flex: 6,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(DateFormat("MMM dd, yyyy").format(DateTime.now()),
+                            style: regularTxt),
+                        Text("Today", style: medBoldTxt),
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    flex: 4,
+                    child: FlatButton.icon(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onPressed: () {
+                        Get.off(AddTaskPage());
+                      },
+                      color: Colors.orange[900],
+                      icon: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                      label: Text("Add Task",
+                          style: regularBoldTxt.copyWith(color: Colors.white)),
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 15),
               Container(
-                margin: const EdgeInsets.only(right: 28),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
@@ -57,7 +138,13 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              getTimeDateUI(),
+              const SizedBox(height: 15),
+              //  getTimeDateUI(),
+              _getTabBar(),
+              Container(
+                height: 100,
+                child: _getTabBarView(),
+              )
             ],
           ),
         ),

@@ -28,6 +28,9 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppConstants.appBackgroundColor,
+      body: Center(
+        child: Text("Task App"),
+      ),
     );
   }
 }
