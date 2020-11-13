@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:xno_taskapp/helpers/app_constants.dart';
 import 'package:xno_taskapp/helpers/layout_helper.dart';
 import 'package:xno_taskapp/helpers/text_styles.dart';
+import 'package:xno_taskapp/model/hive/task.dart';
 import 'package:xno_taskapp/ui/add_task.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +32,7 @@ class _HomePageState extends State<HomePage>
     super.dispose();
   }
 
-  TabBar _getTabBar() {
+  TabBar buildDatesTabs() {
     return TabBar(
       indicatorColor: AppConstants.appThemeColor,
       indicatorSize: TabBarIndicatorSize.label,
@@ -50,9 +52,56 @@ class _HomePageState extends State<HomePage>
 
   TabBarView _getTabBarView() {
     return TabBarView(
-      children: List.generate(endDate.difference(startDate).inDays,
-          (index) => Center(child: Text(index.toString()))),
+      physics: NeverScrollableScrollPhysics(),
+      children: List.generate(
+        endDate.difference(startDate).inDays,
+        (dayIndex) => Column(
+          children: [
+            WatchBoxBuilder(
+              box: LayoutHelper.instance.taskList,
+              builder: (context, box) {
+                Map<dynamic, dynamic> raw = box.toMap();
+                List list = raw.values.toList();
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: list.length,
+                  itemBuilder: (context, index) {
+                    Task personModel = list[index];
+                    if (personModel.date.day ==
+                        DateTime(startDate.year, startDate.month,
+                                startDate.day + (dayIndex))
+                            .day) {
+                      return buildTaskCard(personModel);
+                    }
+                    return buildNoTasksVector();
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       controller: tabController,
+    );
+  }
+
+  Container buildTaskCard(Task personModel) {
+    return Container(
+      decoration: BoxDecoration(color: Colors.white),
+      child: Text(personModel.name),
+    );
+  }
+
+  Column buildNoTasksVector() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Image.asset(
+          'assets/no_task_vector.png',
+          height: LayoutHelper.instance.width / 1.65,
+        ),
+        Text("No Tasks for today", style: medBoldTxt),
+      ],
     );
   }
 
@@ -107,7 +156,7 @@ class _HomePageState extends State<HomePage>
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8)),
                       onPressed: () {
-                        Get.off(AddTaskPage());
+                        Get.to(AddTaskPage());
                       },
                       color: Colors.orange[900],
                       icon: Icon(
@@ -139,75 +188,13 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
               const SizedBox(height: 15),
-              //  getTimeDateUI(),
-              _getTabBar(),
-              Container(
-                height: 100,
+              buildDatesTabs(),
+              Expanded(
                 child: _getTabBarView(),
               )
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget getTimeDateUI() {
-    return Container(
-      width: LayoutHelper.instance.width,
-      margin: const EdgeInsets.only(top: 10),
-      height: 60,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: endDate.difference(startDate).inDays,
-        separatorBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
-              width: 1,
-              height: 52,
-              color: Colors.grey.withOpacity(0.8),
-            ),
-          );
-        },
-        itemBuilder: (BuildContext context, int index) {
-          return Material(
-            color: Colors.transparent,
-            child: InkWell(
-              focusColor: Colors.transparent,
-              highlightColor: Colors.transparent,
-              hoverColor: Colors.transparent,
-              splashColor: Colors.grey.withOpacity(0.2),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(4.0),
-              ),
-              onTap: () {
-                FocusScope.of(Get.context).requestFocus(FocusNode());
-                print(index);
-              },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 5),
-                    child: Text(
-                      '${DateFormat("dd\nMMM").format(DateTime(startDate.year, startDate.month, startDate.day + (index)))}',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Visibility(
-                    visible: index == 0,
-                    child: Container(
-                      width: 15,
-                      height: 2,
-                      color: AppConstants.appThemeColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
       ),
     );
   }

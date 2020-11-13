@@ -17,7 +17,7 @@ class CalendarPopupView extends StatefulWidget {
   final DateTime initialStartDate;
   final Function(DateTime) onApplyClick;
   final Function onCancelClick;
-  
+
   @override
   _CalendarPopupViewState createState() => _CalendarPopupViewState();
 }
@@ -124,9 +124,6 @@ class _CalendarPopupViewState extends State<CalendarPopupView>
                                     highlightColor: Colors.transparent,
                                     onTap: () {
                                       try {
-                                        // animationController.reverse().then((f) {
-
-                                        // });
                                         widget.onApplyClick(selectedDate);
                                         Navigator.pop(context);
                                       } catch (_) {}

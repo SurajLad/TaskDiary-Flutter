@@ -1,4 +1,8 @@
 import 'package:hive/hive.dart';
+import 'package:xno_taskapp/model/hive/user.dart';
+
+part 'task.g.dart';
+
 
 @HiveType(typeId: 1)
 class Task extends HiveObject {
@@ -6,19 +10,28 @@ class Task extends HiveObject {
   String name;
 
   @HiveField(1)
-  DateTime date;
+  User user;
 
   @HiveField(2)
-  DateTime startTime;
+  DateTime date;
 
   @HiveField(3)
-  DateTime endTIme;
+  DateTime startTime;
 
   @HiveField(4)
-  String description;
+  DateTime endTime;
 
   @HiveField(5)
+  String description;
+
+  @HiveField(6)
   String statusTag;
 
-  Task({this.name,this.date,this.startTime,this.endTime,this.statusTag});
+  Task(
+      {this.name,
+      this.user,
+      this.date,
+      this.startTime,
+      this.endTime,
+      this.statusTag});
 }
