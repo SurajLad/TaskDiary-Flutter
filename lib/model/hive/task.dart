@@ -33,5 +33,6 @@ class Task extends HiveObject {
       this.date,
       this.startTime,
       this.endTime,
+      this.description,
       this.statusTag});
 }

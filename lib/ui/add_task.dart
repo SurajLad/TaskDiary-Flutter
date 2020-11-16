@@ -8,13 +8,13 @@ import 'package:xno_taskapp/helpers/layout_helper.dart';
 import 'package:xno_taskapp/helpers/text_styles.dart';
 import 'package:xno_taskapp/model/hive/task.dart';
 import 'package:xno_taskapp/model/task_controller.dart';
+import 'package:xno_taskapp/ui/home_page.dart';
 import 'package:xno_taskapp/ui/widgets/calender_view.dart';
 import 'package:xno_taskapp/ui/widgets/label_widget.dart';
 import 'package:xno_taskapp/ui/widgets/material_button.dart';
 
 class AddTaskPage extends StatelessWidget {
   final TaskController taskController = Get.put(TaskController());
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -160,7 +160,11 @@ class AddTaskPage extends StatelessWidget {
                             Task task = Task(
                               user: null,
                               name: taskController.taskNameController.text,
+                              description:
+                                  taskController.taskDescriptionController.text,
                               date: taskController.selectedDate.value,
+                              startTime: taskController.selectedStartTime.value,
+                              endTime: taskController.selectedEndTime.value,
                             );
                             LayoutHelper.instance.taskList.add(task);
                           },
@@ -248,7 +252,10 @@ class AddTaskPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Get.off(HomePage());
+              taskController.onClose();
+            },
             icon: Icon(
               Icons.arrow_back_ios_rounded,
               color: Colors.white,

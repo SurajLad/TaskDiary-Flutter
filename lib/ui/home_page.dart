@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:xno_taskapp/helpers/app_constants.dart';
 import 'package:xno_taskapp/helpers/layout_helper.dart';
@@ -18,10 +17,33 @@ class _HomePageState extends State<HomePage>
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now().add(const Duration(days: 5));
   TabController tabController;
+  List<Task> taskDay1 = [];
+  List<Task> taskDay2 = [];
+  List<Task> taskDay3 = [];
+  List<Task> taskDay4 = [];
+  List<Task> taskDay5 = [];
 
   @override
   void initState() {
     super.initState();
+    for (int i = 0; i < LayoutHelper.instance.taskList.length; i++) {
+      if (LayoutHelper.instance.taskList.get(i).date.day ==
+          DateTime.now().day) {
+        taskDay1.add(LayoutHelper.instance.taskList.get(i));
+      } else if (LayoutHelper.instance.taskList.get(i).date.day ==
+          DateTime.now().day + 1) {
+        taskDay2.add(LayoutHelper.instance.taskList.get(i));
+      } else if (LayoutHelper.instance.taskList.get(i).date.day ==
+          DateTime.now().day + 2) {
+        taskDay3.add(LayoutHelper.instance.taskList.get(i));
+      } else if (LayoutHelper.instance.taskList.get(i).date.day ==
+          DateTime.now().day + 3) {
+        taskDay4.add(LayoutHelper.instance.taskList.get(i));
+      } else if (LayoutHelper.instance.taskList.get(i).date.day ==
+          DateTime.now().day + 4) {
+        taskDay5.add(LayoutHelper.instance.taskList.get(i));
+      }
+    }
     tabController = TabController(
         length: endDate.difference(startDate).inDays, vsync: this);
   }
@@ -53,55 +75,158 @@ class _HomePageState extends State<HomePage>
   TabBarView _getTabBarView() {
     return TabBarView(
       physics: NeverScrollableScrollPhysics(),
-      children: List.generate(
-        endDate.difference(startDate).inDays,
-        (dayIndex) => Column(
-          children: [
-            WatchBoxBuilder(
-              box: LayoutHelper.instance.taskList,
-              builder: (context, box) {
-                Map<dynamic, dynamic> raw = box.toMap();
-                List list = raw.values.toList();
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: list.length,
-                  itemBuilder: (context, index) {
-                    Task personModel = list[index];
-                    if (personModel.date.day ==
-                        DateTime(startDate.year, startDate.month,
-                                startDate.day + (dayIndex))
-                            .day) {
-                      return buildTaskCard(personModel);
-                    }
-                    return buildNoTasksVector();
-                  },
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      children: <Widget>[
+        buildTaskList(taskDay1),
+        buildTaskList(taskDay2),
+        buildTaskList(taskDay3),
+        buildTaskList(taskDay4),
+        buildTaskList(taskDay5),
+      ],
       controller: tabController,
     );
   }
 
+  Widget buildTaskList(List<Task> taskList) {
+    if (taskList.isEmpty) {
+      return buildNoTasksVector();
+    } else {
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: taskList.length,
+        itemBuilder: (context, index) {
+          Task personModel = taskList[index];
+          return buildTaskCard(personModel);
+        },
+      );
+    }
+  }
+//   TabBarView _getTabBarView() {
+//     return TabBarView(
+//       physics: NeverScrollableScrollPhysics(),
+//       children: List.generate(
+//         endDate.difference(startDate).inDays,
+//         (dayIndex) => Column(
+//           children: [
+//             WatchBoxBuilder(
+//               box: LayoutHelper.instance.taskList,
+//               builder: (context, box) {
+//                 Map<dynamic, dynamic> raw = box.toMap();
+//                 List list = raw.values.toList();
+//                 return ListView.builder(
+//                   shrinkWrap: true,
+//                   itemCount: list.length,
+//                   itemBuilder: (context, index) {
+//                     Task personModel = list[index];
+//                     if (personModel.date.day ==
+//                         DateTime(startDate.year, startDate.month,
+//                                 startDate.day + (dayIndex))
+//                             .day) {
+//                       return buildTaskCard(personModel);
+//                     } else {
+//                       if (index == (list.length - 1)) {
+//                         print(index);
+//                         if (personModel.date.day ==
+//                             startDate.day + (dayIndex)) {
+//                           return buildNoTasksVector();
+//                         } else {
+//                           return Text("IF");
+//                         }
+//                       }
+//                       return Container();
+//                     }
+//                   },
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//       controller: tabController,
+//     );
+//   }
+
   Container buildTaskCard(Task personModel) {
     return Container(
-      decoration: BoxDecoration(color: Colors.white),
-      child: Text(personModel.name),
+      margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+      padding: const EdgeInsets.fromLTRB(18, 10, 10, 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 8, 8, 8.0),
+            child: Text(personModel.name),
+          ),
+          Container(
+            height: 1,
+            color: Colors.grey[300],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Container(
+                color: Colors.red,
+                width: 4,
+                height: 50,
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      personModel.name,
+                      style: regularBoldTxt,
+                    ),
+                    Text(personModel.description ?? ""),
+                  ],
+                ),
+              )
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(Icons.timer),
+              const SizedBox(width: 10),
+              Text(
+                DateFormat("hh:ss a").format(personModel.startTime) +
+                    " - " +
+                    DateFormat("hh:ss a").format(personModel.startTime),
+                style: regularTxt,
+              ),
+              const SizedBox(width: 20),
+              Icon(Icons.person_outline),
+              const SizedBox(width: 10),
+              Text(
+                "1",
+                style: regularTxt,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Column buildNoTasksVector() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Image.asset(
-          'assets/no_task_vector.png',
-          height: LayoutHelper.instance.width / 1.65,
-        ),
-        Text("No Tasks for today", style: medBoldTxt),
-      ],
+  Container buildNoTasksVector() {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(
+            'assets/no_task_vector.png',
+            height: LayoutHelper.instance.width / 1.65,
+          ),
+          Text("No Tasks for today", style: medBoldTxt),
+        ],
+      ),
     );
   }
 
