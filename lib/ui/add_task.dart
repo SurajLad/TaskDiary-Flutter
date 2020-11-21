@@ -1,20 +1,26 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:xno_taskapp/helpers/app_constants.dart';
 import 'package:xno_taskapp/helpers/layout_helper.dart';
 import 'package:xno_taskapp/helpers/text_styles.dart';
+import 'package:xno_taskapp/model/hive/label.dart';
 import 'package:xno_taskapp/model/hive/task.dart';
 import 'package:xno_taskapp/model/task_controller.dart';
 import 'package:xno_taskapp/ui/home_page.dart';
 import 'package:xno_taskapp/ui/widgets/calender_view.dart';
+import 'package:xno_taskapp/ui/widgets/custom_textfield.dart';
 import 'package:xno_taskapp/ui/widgets/label_widget.dart';
 import 'package:xno_taskapp/ui/widgets/material_button.dart';
 
 class AddTaskPage extends StatelessWidget {
+  final TextEditingController labelcontroller = TextEditingController();
+  Color selectedLabelColor;
   final TaskController taskController = Get.put(TaskController());
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -143,12 +149,27 @@ class AddTaskPage extends StatelessWidget {
                           children: [
                             LabelWidget(label: "Running"),
                             const SizedBox(width: 10),
-                            DottedBorder(
-                              color: AppConstants.appThemeColor,
-                              strokeWidth: 1,
-                              child: Icon(
-                                Icons.add,
+                            InkWell(
+                              onTap: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    builder: (builder) {
+                                      return Material(
+                                        child: new Container(
+                                          padding: const EdgeInsets.all(20),
+                                          child: buildLabelWidget(),
+                                        ),
+                                      );
+                                    });
+                              },
+                              child: DottedBorder(
                                 color: AppConstants.appThemeColor,
+                                strokeWidth: 1,
+                                child: Icon(
+                                  Icons.add,
+                                  color: AppConstants.appThemeColor,
+                                ),
                               ),
                             ),
                           ],
@@ -179,6 +200,57 @@ class AddTaskPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildLabelWidget() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "Create new Label",
+          style: medBoldTxt,
+        ),
+        const SizedBox(height: 5),
+        CustomTextField(
+          controller: labelcontroller,
+          hintText: "Label name",
+          maxLines: 1,
+        ),
+        const SizedBox(height: 15),
+        Text(
+          "Select Color",
+          style: medBoldTxt,
+        ),
+        const SizedBox(height: 15),
+        BlockPicker(
+          pickerColor: Color(0xff443a49),
+          onColorChanged: (Color color) {
+            selectedLabelColor = color;
+          },
+        ),
+        const SizedBox(height: 15),
+        FlatButton(
+          minWidth: LayoutHelper.instance.width / 2,
+          height: 40,
+          child: Text(
+            "Add Label",
+            style: medBoldTxt,
+          ),
+          color: AppConstants.appBackgroundColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          onPressed: () {
+            if (labelcontroller.text.isNotEmpty && selectedLabelColor != null) {
+              Label label = Label(
+                name: labelcontroller.text,
+                color: selectedLabelColor,
+              );
+              LayoutHelper.instance.labelList.add(label);
+              Navigator.pop(Get.context);
+            }
+          },
+        ),
+      ],
     );
   }
 

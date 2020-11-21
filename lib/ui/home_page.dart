@@ -90,13 +90,16 @@ class _HomePageState extends State<HomePage>
     if (taskList.isEmpty) {
       return buildNoTasksVector();
     } else {
-      return ListView.builder(
-        shrinkWrap: true,
-        itemCount: taskList.length,
-        itemBuilder: (context, index) {
-          Task personModel = taskList[index];
-          return buildTaskCard(personModel);
-        },
+      return Container(
+        margin: const EdgeInsets.only(top: 10),
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: taskList.length,
+          itemBuilder: (context, index) {
+            Task personModel = taskList[index];
+            return buildTaskCard(personModel);
+          },
+        ),
       );
     }
   }
@@ -157,7 +160,7 @@ class _HomePageState extends State<HomePage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 8, 8, 8.0),
+            padding: const EdgeInsets.fromLTRB(0, 4, 0, 4.0),
             child: Text(personModel.name),
           ),
           Container(
@@ -190,7 +193,7 @@ class _HomePageState extends State<HomePage>
           ),
           const SizedBox(height: 10),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Icon(Icons.timer),
               const SizedBox(width: 10),
@@ -201,7 +204,7 @@ class _HomePageState extends State<HomePage>
                 style: regularTxt,
               ),
               const SizedBox(width: 20),
-              Icon(Icons.person_outline),
+              Icon(Icons.people),
               const SizedBox(width: 10),
               Text(
                 "1",
@@ -254,8 +257,8 @@ class _HomePageState extends State<HomePage>
                     ),
                   ),
                   Flexible(
-                    flex: 3,
-                    child: Image.asset('assets/profile_vector.png'),
+                    flex: 2,
+                    child: buildUserProfile(),
                   )
                 ],
               ),
@@ -294,25 +297,25 @@ class _HomePageState extends State<HomePage>
                   )
                 ],
               ),
-              const SizedBox(height: 15),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: TextFormField(
-                  decoration: InputDecoration(
-                    hintText: "Search Task",
-                    hintStyle: regularTxt,
-                    prefixIcon: Icon(
-                      Icons.search,
-                      color: Colors.black,
-                    ),
-                    border: InputBorder.none,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 15),
+              // const SizedBox(height: 15),
+              // Container(
+              //   decoration: BoxDecoration(
+              //     color: Colors.grey[200],
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   child: TextFormField(
+              //     decoration: InputDecoration(
+              //       hintText: "Search Task",
+              //       hintStyle: regularTxt,
+              //       prefixIcon: Icon(
+              //         Icons.search,
+              //         color: Colors.black,
+              //       ),
+              //       border: InputBorder.none,
+              //     ),
+              //   ),
+              // ),
+              const SizedBox(height: 25),
               buildDatesTabs(),
               Expanded(
                 child: _getTabBarView(),
@@ -322,5 +325,23 @@ class _HomePageState extends State<HomePage>
         ),
       ),
     );
+  }
+
+  Container buildUserProfile() {
+    return Container(
+        width: 80,
+        height: 80,
+        margin: const EdgeInsets.all(5),
+         padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: AppConstants.appThemeColor.withOpacity(0.7),
+          shape: BoxShape.circle,
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            'assets/avatars/male_01.png',
+            fit: BoxFit.fitHeight,
+          ),
+        ));
   }
 }
