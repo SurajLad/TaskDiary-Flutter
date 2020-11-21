@@ -32,7 +32,7 @@ class AddTaskPage extends StatelessWidget {
             children: [
               buildAppBar(context),
               Container(
-                margin: const EdgeInsets.only(top: 15, bottom: 20, left: 20),
+                margin: const EdgeInsets.only(top: 5, bottom: 20, left: 25),
                 child: Text(
                   "Add Task",
                   style: largeBoldTxt.copyWith(color: Colors.white),
@@ -44,8 +44,8 @@ class AddTaskPage extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 28, right: 28),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
+                    topLeft: Radius.circular(24),
+                    topRight: Radius.circular(24),
                   ),
                   color: AppConstants.appBackgroundColor,
                 ),
@@ -57,35 +57,12 @@ class AddTaskPage extends StatelessWidget {
                       children: [
                         const SizedBox(height: 20),
                         buildFieldTItle(title: "TASK"),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.grey[250],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextFormField(
-                            controller: taskController.taskNameController,
-                            cursorColor: AppConstants.appThemeColor,
-                            decoration: InputDecoration(
-                              hintText: "Enter Task Name",
-                              hintStyle: medTxt.copyWith(color: Colors.black54),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: AppConstants.fontTitleColor),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: AppConstants.fontTitleColor),
-                              ),
-                            ),
-                          ),
+                        CustomTextField(
+                          controller: taskController.taskNameController,
+                          hintText: "Enter Task Name",
+                          maxLines: 1,
                         ),
-                        const SizedBox(height: 10),
-                        buildFieldTItle(title: "RECENT MEET"),
-                        Container(
-                          color: Colors.amber,
-                          height: 40,
-                        ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 15),
                         buildFieldTItle(title: "DATE"),
                         InkWell(
                           onTap: () {
@@ -117,38 +94,16 @@ class AddTaskPage extends StatelessWidget {
                         buildTimingWidgets(context, controller),
                         const SizedBox(height: 15),
                         buildFieldTItle(title: "DESCRIPTION"),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red[950],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextFormField(
-                            controller:
-                                taskController.taskDescriptionController,
-                            maxLines: 3,
-                            cursorColor: AppConstants.appThemeColor,
-                            decoration: InputDecoration(
-                              hintText: "Enter description",
-                              hintStyle: medTxt.copyWith(color: Colors.black54),
-                              border: InputBorder.none,
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: AppConstants.fontTitleColor),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: AppConstants.fontTitleColor),
-                              ),
-                            ),
-                          ),
+                        CustomTextField(
+                          controller: taskController.taskDescriptionController,
+                          maxLines: 3,
+                          hintText: "Enter description",
                         ),
-                        const SizedBox(height: 10),
-                        buildFieldTItle(title: "LABEL"),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 15),
                         Row(
                           children: [
-                            LabelWidget(label: "Running"),
-                            const SizedBox(width: 10),
+                            buildFieldTItle(title: "LABEL"),
+                            const SizedBox(width: 20),
                             InkWell(
                               onTap: () {
                                 showModalBottomSheet(
@@ -174,9 +129,56 @@ class AddTaskPage extends StatelessWidget {
                             ),
                           ],
                         ),
+                        const SizedBox(height: 20),
+                        Container(
+                          width: LayoutHelper.instance.width,
+                          height: 30,
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            scrollDirection: Axis.horizontal,
+                            itemCount: LayoutHelper.instance.labelList.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                splashColor: Colors.red,
+                                onTap: () {
+                                  if (taskController.selectedLabelList[index]) {
+                                    taskController.updateSelectedList(
+                                        index, false);
+                                  } else {
+                                    taskController.updateSelectedList(
+                                        index, true);
+                                    taskController.label = LayoutHelper
+                                        .instance.labelList
+                                        .get(index)
+                                        .name;
+                                  }
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 8),
+                                  child: ColorFiltered(
+                                    colorFilter: ColorFilter.mode(
+                                      taskController.selectedLabelList[index]
+                                          ? Colors.white
+                                          : Colors.transparent,
+                                      BlendMode.saturation,
+                                    ),
+                                    child: LabelWidget(
+                                      label: LayoutHelper.instance.labelList
+                                          .get(index)
+                                          .name,
+                                      color: LayoutHelper.instance.labelList
+                                          .get(index)
+                                          .color,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                         const SizedBox(height: 30),
                         CustomButton(
-                          color: Color(0xFF6464A7),
+                          color: const Color(0xFF6464A7),
                           onTap: () {
                             Task task = Task(
                               user: null,
@@ -186,11 +188,11 @@ class AddTaskPage extends StatelessWidget {
                               date: taskController.selectedDate.value,
                               startTime: taskController.selectedStartTime.value,
                               endTime: taskController.selectedEndTime.value,
+                              statusTag: taskController.label,
                             );
                             LayoutHelper.instance.taskList.add(task);
                           },
                         ),
-                        const SizedBox(height: 5),
                       ],
                     );
                   },
@@ -223,11 +225,21 @@ class AddTaskPage extends StatelessWidget {
           style: medBoldTxt,
         ),
         const SizedBox(height: 15),
-        BlockPicker(
-          pickerColor: Color(0xff443a49),
-          onColorChanged: (Color color) {
-            selectedLabelColor = color;
-          },
+        Container(
+          height: 150,
+          child: BlockPicker(
+            itemBuilder: (color, isCurrentColor, changeColor) => Container(
+              margin: const EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: color,
+              ),
+            ),
+            pickerColor: Color(0xff443a49),
+            onColorChanged: (Color color) {
+              selectedLabelColor = color;
+            },
+          ),
         ),
         const SizedBox(height: 15),
         FlatButton(
@@ -235,17 +247,18 @@ class AddTaskPage extends StatelessWidget {
           height: 40,
           child: Text(
             "Add Label",
-            style: medBoldTxt,
+            style: medBoldTxt.copyWith(color: Colors.white),
           ),
-          color: AppConstants.appBackgroundColor,
+          color: AppConstants.appThemeColor.withOpacity(0.7),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           onPressed: () {
             if (labelcontroller.text.isNotEmpty && selectedLabelColor != null) {
               Label label = Label(
                 name: labelcontroller.text,
-                color: selectedLabelColor,
+                color: selectedLabelColor.value,
               );
               LayoutHelper.instance.labelList.add(label);
+              taskController.clearSelectedListAndInit();
               Navigator.pop(Get.context);
             }
           },
@@ -333,10 +346,7 @@ class AddTaskPage extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 22,
-          ),
+          buildUserProfile(),
         ],
       ),
     );
@@ -478,6 +488,23 @@ class AddTaskPage extends StatelessWidget {
     return Text(
       title,
       style: regularBoldTxt.copyWith(color: AppConstants.fontTitleColor),
+    );
+  }
+
+  Widget buildUserProfile() {
+    return ClipOval(
+      child: Container(
+        width: 55,
+        height: 55,
+        decoration: BoxDecoration(
+            color: AppConstants.appThemeColor.withOpacity(0.7),
+            shape: BoxShape.circle,
+            image: DecorationImage(
+                fit: BoxFit.contain,
+                image: AssetImage(
+                  'assets/avatars/male_01.png',
+                ))),
+      ),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 part 'label.g.dart';
@@ -9,7 +8,7 @@ class Label extends HiveObject {
   String name;
 
   @HiveField(1)
-  Color color;
+  int color;
 
   Label({this.name, this.color});
 }

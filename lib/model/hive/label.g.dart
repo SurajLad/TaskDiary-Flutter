@@ -18,7 +18,7 @@ class LabelAdapter extends TypeAdapter<Label> {
     };
     return Label(
       name: fields[0] as String,
-      color: fields[1] as Color,
+      color: fields[1] as int,
     );
   }
 

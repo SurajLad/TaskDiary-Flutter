@@ -103,50 +103,50 @@ class _HomePageState extends State<HomePage>
       );
     }
   }
-//   TabBarView _getTabBarView() {
-//     return TabBarView(
-//       physics: NeverScrollableScrollPhysics(),
-//       children: List.generate(
-//         endDate.difference(startDate).inDays,
-//         (dayIndex) => Column(
-//           children: [
-//             WatchBoxBuilder(
-//               box: LayoutHelper.instance.taskList,
-//               builder: (context, box) {
-//                 Map<dynamic, dynamic> raw = box.toMap();
-//                 List list = raw.values.toList();
-//                 return ListView.builder(
-//                   shrinkWrap: true,
-//                   itemCount: list.length,
-//                   itemBuilder: (context, index) {
-//                     Task personModel = list[index];
-//                     if (personModel.date.day ==
-//                         DateTime(startDate.year, startDate.month,
-//                                 startDate.day + (dayIndex))
-//                             .day) {
-//                       return buildTaskCard(personModel);
-//                     } else {
-//                       if (index == (list.length - 1)) {
-//                         print(index);
-//                         if (personModel.date.day ==
-//                             startDate.day + (dayIndex)) {
-//                           return buildNoTasksVector();
-//                         } else {
-//                           return Text("IF");
-//                         }
-//                       }
-//                       return Container();
-//                     }
-//                   },
-//                 );
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//       controller: tabController,
-//     );
-//   }
+  // TabBarView _getTabBarView() {
+  //   return TabBarView(
+  //     physics: NeverScrollableScrollPhysics(),
+  //     children: List.generate(
+  //       endDate.difference(startDate).inDays,
+  //       (dayIndex) => Column(
+  //         children: [
+  //           WatchBoxBuilder(
+  //             box: LayoutHelper.instance.taskList,
+  //             builder: (context, box) {
+  //               Map<dynamic, dynamic> raw = box.toMap();
+  //               List list = raw.values.toList();
+  //               return ListView.builder(
+  //                 shrinkWrap: true,
+  //                 itemCount: list.length,
+  //                 itemBuilder: (context, index) {
+  //                   Task personModel = list[index];
+  //                   if (personModel.date.day ==
+  //                       DateTime(startDate.year, startDate.month,
+  //                               startDate.day + (dayIndex))
+  //                           .day) {
+  //                     return buildTaskCard(personModel);
+  //                   } else {
+  //                     if (index == (list.length - 1)) {
+  //                       print(index);
+  //                       if (personModel.date.day ==
+  //                           startDate.day + (dayIndex)) {
+  //                         return buildNoTasksVector();
+  //                       } else {
+  //                         return Text("IF");
+  //                       }
+  //                     }
+  //                     return Container();
+  //                   }
+  //                 },
+  //               );
+  //             },
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     controller: tabController,
+  //   );
+  // }
 
   Container buildTaskCard(Task personModel) {
     return Container(
@@ -327,21 +327,21 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Container buildUserProfile() {
-    return Container(
+  Widget buildUserProfile() {
+    return ClipOval(
+      child: Container(
         width: 80,
         height: 80,
         margin: const EdgeInsets.all(5),
-         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: AppConstants.appThemeColor.withOpacity(0.7),
-          shape: BoxShape.circle,
-        ),
-        child: ClipOval(
-          child: Image.asset(
-            'assets/avatars/male_01.png',
-            fit: BoxFit.fitHeight,
-          ),
-        ));
+            color: AppConstants.appThemeColor.withOpacity(0.7),
+            shape: BoxShape.circle,
+            image: DecorationImage(
+              fit: BoxFit.contain,
+                image: AssetImage(
+              'assets/avatars/male_01.png',
+            ))),
+      ),
+    );
   }
 }
