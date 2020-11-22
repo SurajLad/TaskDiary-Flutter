@@ -29,6 +29,7 @@ class TaskController extends GetxController {
     for (int i = 0; i < LayoutHelper.instance.labelList.length; i++) {
       selectedLabelList.add(false);
     }
+    print(selectedLabelList.length);
     super.onInit();
   }
 
@@ -42,7 +43,6 @@ class TaskController extends GetxController {
 
   @override
   void onClose() {
-    selectedLabelList.clear();
     super.onClose();
   }
 }

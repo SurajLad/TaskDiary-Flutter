@@ -34,6 +34,7 @@ dependencies:
   path_provider: ^1.6.11
   dotted_border: ^1.0.6
   flutter_colorpicker: ^0.3.4
+  flutter_spinkit: ^4.1.2+1
 
 
 dev_dependencies:

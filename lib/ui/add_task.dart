@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:xno_taskapp/ui/widgets/calender_view.dart';
 import 'package:xno_taskapp/ui/widgets/custom_textfield.dart';
 import 'package:xno_taskapp/ui/widgets/label_widget.dart';
 import 'package:xno_taskapp/ui/widgets/material_button.dart';
+import 'package:xno_taskapp/ui/widgets/ui_helpers.dart';
 
 class AddTaskPage extends StatelessWidget {
   final TextEditingController labelcontroller = TextEditingController();
@@ -40,7 +42,7 @@ class AddTaskPage extends StatelessWidget {
               ),
               Container(
                 width: LayoutHelper.instance.width,
-                height: LayoutHelper.instance.height + 40,
+                height: LayoutHelper.instance.height,
                 padding: const EdgeInsets.only(left: 28, right: 28),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -138,6 +140,8 @@ class AddTaskPage extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             itemCount: LayoutHelper.instance.labelList.length,
                             itemBuilder: (context, index) {
+                              print(taskController.selectedLabelList.length);
+
                               return InkWell(
                                 splashColor: Colors.red,
                                 onTap: () {
@@ -180,17 +184,29 @@ class AddTaskPage extends StatelessWidget {
                         CustomButton(
                           color: const Color(0xFF6464A7),
                           onTap: () {
-                            Task task = Task(
-                              user: null,
-                              name: taskController.taskNameController.text,
-                              description:
-                                  taskController.taskDescriptionController.text,
-                              date: taskController.selectedDate.value,
-                              startTime: taskController.selectedStartTime.value,
-                              endTime: taskController.selectedEndTime.value,
-                              statusTag: taskController.label,
-                            );
-                            LayoutHelper.instance.taskList.add(task);
+                            bool value = doValidaition();
+                            if (value) {
+                              showLoading(context);
+                              Timer(Duration(seconds: 3), () {
+                                Navigator.pop(context);
+                                Task task = Task(
+                                  user: null,
+                                  name: taskController.taskNameController.text,
+                                  description: taskController
+                                      .taskDescriptionController.text,
+                                  date: taskController.selectedDate.value,
+                                  startTime:
+                                      taskController.selectedStartTime.value,
+                                  endTime: taskController.selectedEndTime.value,
+                                  statusTag: taskController.label,
+                                );
+                                LayoutHelper.instance.taskList.add(task);
+                                showSnackbar(
+                                    "Success", "Task has been created.");
+                              });
+                            } else {
+
+                            }
                           },
                         ),
                       ],
@@ -228,13 +244,13 @@ class AddTaskPage extends StatelessWidget {
         Container(
           height: 150,
           child: BlockPicker(
-            itemBuilder: (color, isCurrentColor, changeColor) => Container(
-              margin: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                color: color,
-              ),
-            ),
+            // itemBuilder: (color, isCurrentColor, changeColor) => Container(
+            //   margin: const EdgeInsets.all(6),
+            //   decoration: BoxDecoration(
+            //     shape: BoxShape.rectangle,
+            //     color: color,
+            //   ),
+            // ),
             pickerColor: Color(0xff443a49),
             onColorChanged: (Color color) {
               selectedLabelColor = color;
@@ -506,5 +522,19 @@ class AddTaskPage extends StatelessWidget {
                 ))),
       ),
     );
+  }
+
+  bool doValidaition() {
+    if (taskController.taskNameController.text.isEmpty) {
+      showSnackbar("Failed", "Please enter task name.");
+      return false;
+    } else if (taskController.taskDescriptionController.text.isEmpty) {
+      showSnackbar("Failed", "Please enter task description.");
+      return false;
+    } else if (taskController.label == null) {
+      showSnackbar("Failed", "Please select task label.");
+      return false;
+    }
+    return true;
   }
 }
