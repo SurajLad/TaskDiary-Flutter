@@ -1,16 +1,27 @@
-# xno_taskapp
+# Task Manager-App-Flutter
 
-A new Flutter project.
+Task Manager App Made in Flutter.
+ 
+#### Supported features:
+- Create task 
+- Dashboard
+- Custom Task Label 
+- Offline Storage in Hive DB
 
-## Getting Started
+Test App by Downloading Apk From Screenshot/app.apk
 
-This project is a starting point for a Flutter application.
+#### Getting Started:
 
-A few resources to get you started if this is your first Flutter project:
+1. Clone/Download The Repo 
+4. run ```flutter run ```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+#### Screenshots:
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img src="Screenshots/screenshot_1.png" width="300" height="500"> <img src="Screenshots/screenshot_2.png" width="300" height="500">
+<img src="Screenshots/screenshot_3.png" width="300" height="500"> <img src="Screenshots/screenshot_4.png" width="300" height="500">
+
+#### Graphics Credits:
+
+- [Mahmudul Hasan Manik for Devignedge](https://dribbble.com/shots/14156535-Taskito-Task-Management-App) - UI Inspired from here.
+- FlatIcons
+- FreePik
