@@ -19,7 +19,6 @@ class TaskController extends GetxController {
       selectedLabelList[i] = false;
     }
     selectedLabelList[index] = action;
-
     update();
   }
 

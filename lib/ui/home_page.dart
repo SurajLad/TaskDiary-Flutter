@@ -150,18 +150,27 @@ class _HomePageState extends State<HomePage>
 
   Container buildTaskCard(Task personModel) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(5, 5, 5, 5),
+      margin: const EdgeInsets.fromLTRB(20, 5, 20, 5),
       padding: const EdgeInsets.fromLTRB(18, 10, 10, 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black38,
+              offset: Offset(0.5, 0.5),
+              blurRadius: 2,
+            ),
+          ]),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 4, 0, 4.0),
-            child: Text(personModel.name),
+            child: Text(
+              personModel.name,
+              style: regularBoldTxt,
+            ),
           ),
           Container(
             height: 1,
@@ -179,13 +188,17 @@ class _HomePageState extends State<HomePage>
                 margin: const EdgeInsets.only(left: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
-                      personModel.name,
+                      personModel.description,
+                      style: regularTxt.copyWith(color: Colors.black54),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      personModel.statusTag ?? "",
                       style: regularBoldTxt,
                     ),
-                    Text(personModel.description ?? ""),
                   ],
                 ),
               )
@@ -193,23 +206,17 @@ class _HomePageState extends State<HomePage>
           ),
           const SizedBox(height: 10),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Icon(Icons.timer),
-              const SizedBox(width: 10),
+              const SizedBox(width: 5),
               Text(
                 DateFormat("hh:ss a").format(personModel.startTime) +
                     " - " +
-                    DateFormat("hh:ss a").format(personModel.startTime),
+                    DateFormat("hh:ss a").format(personModel.endTime),
                 style: regularTxt,
               ),
-              const SizedBox(width: 20),
-              Icon(Icons.people),
               const SizedBox(width: 10),
-              Text(
-                "1",
-                style: regularTxt,
-              ),
             ],
           ),
         ],
@@ -238,90 +245,78 @@ class _HomePageState extends State<HomePage>
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppConstants.appBackgroundColor,
-        body: Container(
-          margin: const EdgeInsets.only(left: 25, top: 10, right: 25),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        body: Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 25, top: 10, right: 25),
+              child: Column(
                 children: [
-                  Flexible(
-                    flex: 7,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("Hi, Suraj Lad", style: medBoldTxt),
-                        Text("Todays Quote", style: regularTxt),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    flex: 2,
-                    child: buildUserProfile(),
-                  )
-                ],
-              ),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 6,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(DateFormat("MMM dd, yyyy").format(DateTime.now()),
-                            style: regularTxt),
-                        Text("Today", style: medBoldTxt),
-                      ],
-                    ),
-                  ),
-                  Flexible(
-                    flex: 4,
-                    child: FlatButton.icon(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      onPressed: () {
-                        Get.to(AddTaskPage());
-                      },
-                      color: Colors.orange[900],
-                      icon: Icon(
-                        Icons.add,
-                        color: Colors.white,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 7,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text("Hi, Suraj Lad", style: medBoldTxt),
+                          ],
+                        ),
                       ),
-                      label: Text("Add Task",
-                          style: regularBoldTxt.copyWith(color: Colors.white)),
-                    ),
-                  )
+                      Flexible(
+                        flex: 2,
+                        child: buildUserProfile(),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 15),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                                DateFormat("MMM dd, yyyy")
+                                    .format(DateTime.now()),
+                                style: regularTxt),
+                            Text("Today", style: medBoldTxt),
+                          ],
+                        ),
+                      ),
+                      Flexible(
+                        flex: 4,
+                        child: FlatButton.icon(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          onPressed: () {
+                            Get.to(AddTaskPage());
+                          },
+                          color: Colors.orange[900],
+                          icon: Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                          label: Text("Add Task",
+                              style:
+                                  regularBoldTxt.copyWith(color: Colors.white)),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 25),
                 ],
               ),
-              // const SizedBox(height: 15),
-              // Container(
-              //   decoration: BoxDecoration(
-              //     color: Colors.grey[200],
-              //     borderRadius: BorderRadius.circular(12),
-              //   ),
-              //   child: TextFormField(
-              //     decoration: InputDecoration(
-              //       hintText: "Search Task",
-              //       hintStyle: regularTxt,
-              //       prefixIcon: Icon(
-              //         Icons.search,
-              //         color: Colors.black,
-              //       ),
-              //       border: InputBorder.none,
-              //     ),
-              //   ),
-              // ),
-              const SizedBox(height: 25),
-              buildDatesTabs(),
-              Expanded(
-                child: _getTabBarView(),
-              )
-            ],
-          ),
+            ),
+            buildDatesTabs(),
+            Expanded(
+              child: _getTabBarView(),
+            )
+          ],
         ),
       ),
     );
@@ -337,10 +332,10 @@ class _HomePageState extends State<HomePage>
             color: AppConstants.appThemeColor.withOpacity(0.7),
             shape: BoxShape.circle,
             image: DecorationImage(
-              fit: BoxFit.contain,
+                fit: BoxFit.contain,
                 image: AssetImage(
-              'assets/avatars/male_01.png',
-            ))),
+                  'assets/avatars/male_01.png',
+                ))),
       ),
     );
   }

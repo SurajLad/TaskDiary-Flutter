@@ -140,7 +140,6 @@ class AddTaskPage extends StatelessWidget {
                             scrollDirection: Axis.horizontal,
                             itemCount: LayoutHelper.instance.labelList.length,
                             itemBuilder: (context, index) {
-                              print(taskController.selectedLabelList.length);
 
                               return InkWell(
                                 splashColor: Colors.red,
@@ -201,12 +200,11 @@ class AddTaskPage extends StatelessWidget {
                                   statusTag: taskController.label,
                                 );
                                 LayoutHelper.instance.taskList.add(task);
-                                showSnackbar(
-                                    "Success", "Task has been created.");
+                                Get.off(HomePage()).then((value) =>
+                                    showSnackbar(
+                                        "Success", "Task has been created."));
                               });
-                            } else {
-
-                            }
+                            } else {}
                           },
                         ),
                       ],
