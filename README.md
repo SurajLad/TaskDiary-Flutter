@@ -17,8 +17,8 @@ Test App by Downloading Apk From Screenshot/app.apk
 
 #### Screenshots:
 
-<img src="Screenshots/screenshot_1.png" width="300" height="500"> <img src="Screenshots/screenshot_2.png" width="300" height="500">
-<img src="Screenshots/screenshot_3.png" width="300" height="500"> <img src="Screenshots/screenshot_4.png" width="300" height="500">
+<img src="Screenshots/screenshot_1.png" width="300" height="550"> <img src="Screenshots/screenshot_2.png" width="300" height="550"><br>
+<img src="Screenshots/screenshot_3.png" width="300" height="550"> <img src="Screenshots/screenshot_4.png" width="300" height="550">
 
 #### Graphics Credits:
 
