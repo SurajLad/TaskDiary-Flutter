@@ -1,4 +1,4 @@
-# Task Manager-App-Flutter
+# Task Diary-App-Flutter
 
 Task Manager App Made in Flutter.
  
